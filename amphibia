@@ -1,0 +1,35 @@
+package jtm.activity05;
+
+import jtm.activity04.Road;
+import jtm.activity04.Transport;
+
+public class Amphibia extends Transport {
+
+	Ship ship;
+	private byte sails = ship.getSails();
+	Vehicle vehicle;
+	private int wheels = vehicle.getWheels();
+	
+	
+	public Amphibia(String id, float consumption, int tankSize, byte sails, int wheels) {
+		// TODO Auto-generated constructor stub
+		super(id, consumption, tankSize);
+		this.sails = sails;
+		this.wheels = wheels;
+	}
+
+
+	@Override
+	public String move(Road road) {
+		// TODO Auto-generated method stub
+		if (road instanceof WaterRoad) {
+			return String.format("ID Ship is sailing on %s with %d sails", road, sails);
+		}
+		if (road.getClass() == Road.class) {
+			return String.format("ID Vehicle is driving on %s with %d wheels", road, wheels);
+		}
+		return "Not possible!";
+	}
+
+	
+}
