@@ -4,23 +4,34 @@ import jtm.activity04.Road;
 import jtm.activity04.Transport;
 
 public class Ship extends Transport {
-	
-	protected byte sails;
 
-	public Ship(String id, byte sails) {
+	protected byte sails;
+	
+	public Ship(String id, float consumption, int tankSize, byte sails) {
+		super(id, consumption, tankSize);
+		this.sails = sails;
 		// TODO Auto-generated constructor stub
+	}
+	
+	public Ship(String id, byte sails) {
 		super(id, 0, 0);
 		this.sails = sails;
-		
+		// TODO Auto-generated constructor stub
 	}
+	
+	public Ship() {
+		// TODO Auto-generated constructor stub
+	}
+	
 
 	@Override
 	public String move(Road road) {
 		// TODO Auto-generated method stub
-		if(road instanceof WaterRoad) {
-			return String.format("ID Ship is sailing on %s with %d sails",  road, sails);
-		}
-		return String.format("Cannot sail on %s ", road);
+		 if(road instanceof WaterRoad) {
+			 super.move(road);
+			 return String.format("%s Ship is sailing on %s with %d sails", super.getId(), road, sails);
+		 }
+		return String.format("Cannot sail on %s", road);
 	}
 
 	public byte getSails() {
@@ -32,4 +43,5 @@ public class Ship extends Transport {
 	}
 	
 	
+
 }
