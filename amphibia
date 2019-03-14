@@ -4,32 +4,32 @@ import jtm.activity04.Road;
 import jtm.activity04.Transport;
 
 public class Amphibia extends Transport {
-
-	Ship ship;
+	
+	private Ship ship = new Ship();
 	private byte sails = ship.getSails();
-	Vehicle vehicle;
+	private Vehicle vehicle = new Vehicle();
 	private int wheels = vehicle.getWheels();
-	
-	
+
 	public Amphibia(String id, float consumption, int tankSize, byte sails, int wheels) {
-		// TODO Auto-generated constructor stub
 		super(id, consumption, tankSize);
 		this.sails = sails;
 		this.wheels = wheels;
+		// TODO Auto-generated constructor stub
 	}
-
 
 	@Override
 	public String move(Road road) {
 		// TODO Auto-generated method stub
 		if (road instanceof WaterRoad) {
-			return String.format("ID Ship is sailing on %s with %d sails", road, sails);
+			return String.format("%s Amphibia is sailing on %s with %d sails", super.getId(), road, sails);
 		}
 		if (road.getClass() == Road.class) {
-			return String.format("ID Vehicle is driving on %s with %d wheels", road, wheels);
+			super.move(road);
+			return String.format("%s Amphibia is driving on %s with %d wheels", super.getId(), road, wheels);
 		}
 		return "Not possible!";
 	}
-
 	
+	
+
 }
