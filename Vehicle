@@ -6,25 +6,25 @@ import jtm.activity04.Transport;
 public class Vehicle extends Transport {
 	
 	protected int wheels;
-	
+
 	public Vehicle(String id, float consumption, int tankSize, int wheels) {
-		// TODO Auto-generated constructor stub
 		super(id, consumption, tankSize);
 		this.wheels = wheels;
+		// TODO Auto-generated constructor stub
 	}
 	
-	public Vehicle(String id, float consumption, int tankSize) {
-		// TODO Auto-generated constructor stub
-		super(id, consumption, tankSize);
+	public Vehicle() {
+
 	}
 
 	@Override
 	public String move(Road road) {
 		// TODO Auto-generated method stub
-		if (road.getClass() == Road.class) {
-			return String.format("ID Vehicle is driving on %s with %d wheels", road, wheels);
+		if(road.getClass() == Road.class) {
+			super.move(road);
+			return String.format("%s Vehicle is driving on %s with %d wheels", getId(), road, wheels);
 		}
-		return String.format("Cannot drive on %s ", road);
+		return String.format("Cannot drive on %s", road);
 	}
 
 	public int getWheels() {
@@ -34,7 +34,6 @@ public class Vehicle extends Transport {
 	public void setWheels(int wheels) {
 		this.wheels = wheels;
 	}
-	
+
 	
 }
-
