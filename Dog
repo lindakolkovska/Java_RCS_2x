@@ -1,0 +1,32 @@
+/**
+ * 
+ */
+package jtm.activity07;
+
+
+public class Dog extends Mammal {
+
+private String name;
+	
+	public Dog() {
+		
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		
+		if(name.matches("[a-zA-Z]+") && name.substring(0,1) == name.substring(0,1).toUpperCase()){
+			this.name = name;
+		} else {
+			this.name="";
+		}
+		
+		
+	}
+	
+	
+
+}
