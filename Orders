@@ -37,7 +37,7 @@ import antlr.collections.List;
 
 public class Orders implements Iterator<Order> {
 	
-	List <Order> ord = new ArrayList<Order>();
+	ArrayList<Order> ord = new ArrayList<Order>();
 	
 	// Orders() — create new empty Orders
 	public Orders() {
@@ -46,19 +46,19 @@ public class Orders implements Iterator<Order> {
 	
 	//- add(Order item)  add passed order to the Orders
 	public void add(Order item) {
-		
+		ord.add(item);
 	}
 	
 	// List<Order> getItemsList() — List of all customer orders
-	public List<Order> getItemsList(){
-		
-		return null;
+	public ArrayList<Order> getItemsList(){
+		return ord;
 	}
 	
 	
 	@Override
 	public boolean hasNext() {
 		// TODO Auto-generated method stub
+		if()
 		return false;
 	}
 
