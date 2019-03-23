@@ -1,6 +1,7 @@
 package jtm.activity09;
 
 import java.util.Objects;
+import java.util.Comparator;
 
 /*- TODO #1
  * Implement Comparable interface with Order class
@@ -40,21 +41,33 @@ public class Order  implements Comparable<Order>{
 	 
 	 @Override
 	 public int compareTo(Order order) {
+		 
+		 if(equals(order)) {
+			 return 0;
+		 }
 
+		Integer countToInteger = new Integer(this.getCount());
+		Integer countToInteger1 = new Integer(order.getCount());
+		 
 		int valIN = this.getName().compareTo(order.getName());
-		return valIN;
-		//int valC = this.getCustomer().compareTo(order.getCustomer());
-		//return valC;
+				this.getCustomer().compareTo(order.getCustomer());
+				countToInteger.compareTo(countToInteger1);
 		
+		return valIN;
 	 }
 	 
 	 @Override
 		public int hashCode() {
+		 //if .equals() == true for two orders
+		 
 			return Objects.hash(count, customer, name);
 		}
 
 		@Override
 		public boolean equals(Object obj) {
+			//When implementing .equals() method, rely on compareTo() method, as for sane design
+			//* .equals() == true, if compareTo() == 0 (and vice versa).
+
 			if (this == obj) {
 				return true;
 			}
@@ -65,6 +78,8 @@ public class Order  implements Comparable<Order>{
 				return false;
 			}
 			Order other = (Order) obj;
+		
+			
 			return count == other.count && Objects.equals(customer, other.customer) && Objects.equals(name, other.name);
 		}
 
@@ -102,10 +117,20 @@ public class Order  implements Comparable<Order>{
 	}
 
 	public static void main(String[] args)  {
+			Orders orders = new Orders();
 			Order order = new Order("a", "b", 1);
+			Order order1 = new Order("c","d",2);
+			Order order2 = new Order("a", "b", 3);
+			Order order3 = new Order("a", "b", 3);
+			orders.add(order);
+			orders.add(order1);
+			orders.add(order2);
 			
-			System.out.println(order);
-			System.out.println(order.hashCode());
+			System.out.println(orders.getItemsList());
+			System.out.println(orders.getItemsSet());
+			//ItemN: Customer1: 3 - ItemN: Customer2: 1 Set of orders should be: - ItemN:
+			
+			
 		}
 	 
 }
