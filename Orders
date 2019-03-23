@@ -1,11 +1,13 @@
 package jtm.activity09;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Iterator;
-
-import com.gargoylesoftware.htmlunit.javascript.host.Set;
-
-import antlr.collections.List;
+import java.util.ListIterator;
 
 /*- TODO #2
  * Implement Iterator interface with Orders class
@@ -36,55 +38,89 @@ import antlr.collections.List;
  */
 
 public class Orders implements Iterator<Order> {
-	
-	ArrayList<Order> ord = new ArrayList<Order>();
-	
+
+	List<Order> orders = new ArrayList<Order>();
+
 	// Orders() — create new empty Orders
 	public Orders() {
-		
+
 	}
-	
-	//- add(Order item)  add passed order to the Orders
+
+	// - add(Order item) add passed order to the Orders
 	public void add(Order item) {
-		ord.add(item);
+		orders.add(item);
+
 	}
-	
+
 	// List<Order> getItemsList() — List of all customer orders
-	public ArrayList<Order> getItemsList(){
+	public List<Order> getItemsList() {
+		return orders;
+	}
+
+	public  Set<Order> getItemsSet() {
+		// — calculated Set of Orders from list (look at description below)
+		/*
+		 * When implementing getItemsSet() method, join all requests for the same item
+		 * from different customers in following way: if there are two requests: -
+		 * ItemN: Customer1: 3 - ItemN: Customer2: 1 Set of orders should be: - ItemN:
+		 * Customer1,Customer2: 4
+		 */
+
+		Set<Order> ord = new HashSet<Order>();
+		for (Order anObject : orders) {
+			String name = anObject.getName();
+			for (Order anObject1 : orders) {
+				String name1 = anObject1.getName();
+				if (!anObject.equals(anObject1)) {
+					if (name == name1) {
+						ord.add(anObject);
+					}
+				}
+			}
+
+		}
+
 		return ord;
 	}
-	
-	
+
 	@Override
 	public boolean hasNext() {
 		// TODO Auto-generated method stub
-		if()
+		ListIterator<Order> iter = orders.listIterator();
+		while (iter.hasNext() == true) {
+			Order next = iter.next();
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public Order next() {
-		// TODO Auto-generated method stub
+		ListIterator<Order> iter = orders.listIterator();
+		if (hasNext() == true) {
+			Order next = iter.next();
+			return next;
+		}
 		return null;
 	}
-	
-	private Set<Order> getItemsSet(){
-		return null;
-	}
-	
+
 	public void sort() {
-		
+		// sort list of orders according to the sorting rules
+
 	}
-	
+
 	public void remove() {
-		
+		// if 0
+		// if last item
 	}
-	
+
 	public String toString() {
-		return null;
+
+		Collections.sort(orders);
+		String sortedOrdersAsString = orders.toString();
+		return sortedOrdersAsString;
 	}
-	
-	
+
 	/*-
 	 * TODO #1
 	 * Create data structure to hold:
