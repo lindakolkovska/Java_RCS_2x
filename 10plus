@@ -55,7 +55,7 @@ public class StreamEditor {
 		content = "";
 		
 		if(args.length !=4) {
-			System.err.println(inLineNo);
+			System.err.println("Please use arguments: [-]lineNo (TextToAdd/Replace|-) (inputFile|-) (outputFile|-)");
 			System.exit(1);
 		}
 
@@ -72,7 +72,22 @@ public class StreamEditor {
 
 		try {
 			// input the file content to the StringBuffer "input" BufferedReader
-			reader = new BufferedReader(new FileReader(args[2]));
+			/*- TODO Initialize new buffered character reader (BufferedReader) and:
+			 * 1. If input file name (3rd parameter) is "-", add reader to the Standard input (System.in).
+			 * 2. Otherwise check if file exists (if it doesn't, create it) and 
+			 *    add reader to this file.
+			 */
+			
+			if(args[2]=="-") {
+				reader = new BufferedReader(new InputStreamReader(System.in));
+			} 
+
+			if(inFile.exists()) {
+				reader = new BufferedReader(new FileReader(args[2]));
+			} else {
+				writer = new PrintWriter(args[2]);
+			}
+			
 			String line;
 			StringBuffer inputBuffer = new StringBuffer();
 
