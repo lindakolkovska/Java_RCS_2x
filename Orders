@@ -37,9 +37,11 @@ import java.util.ListIterator;
  *  - ItemN: Customer1,Customer2: 4
  */
 
+
 public class Orders implements Iterator<Order> {
 
 	List<Order> orders = new ArrayList<Order>();
+	int curOrd = -1;
 
 	// Orders() — create new empty Orders
 	public Orders() {
@@ -66,59 +68,54 @@ public class Orders implements Iterator<Order> {
 		 * Customer1,Customer2: 4
 		 */
 
-		Set<Order> ord = new HashSet<Order>();
+		HashMap<String, Order> ord = new HashsMap<String, Order>();
 		for (Order anObject : orders) {
 			String name = anObject.getName();
-			for (Order anObject1 : orders) {
-				String name1 = anObject1.getName();
-				if (!anObject.equals(anObject1)) {
-					if (name == name1) {
-						ord.add(anObject);
-					}
-				}
-			}
+		if(ord.containsKey(key)) {
+	            Order o = ord.get(key);
+	            o.customer += "," + anOject.customer;
+	            o.count += anObject.count;
+	        } else {
+	            ord.put(key, new Order(anObject.customer, anObject.name, anObject.count));
+	        }
 
-		}
-
-		return ord;
+		return new HashSet<Order>(ord.values());
 	}
 
 	@Override
 	public boolean hasNext() {
-		// TODO Auto-generated method stub
-		ListIterator<Order> iter = orders.listIterator();
-		while (iter.hasNext() == true) {
-			Order next = iter.next();
-			return true;
-		}
-		return false;
+		return currentOrder < orders.size()-1;
 	}
 
 	@Override
 	public Order next() {
-		ListIterator<Order> iter = orders.listIterator();
-		if (hasNext() == true) {
-			Order next = iter.next();
-			return next;
-		}
-		return null;
+		if (!hasNext()) {
+			throw new NoSuchElementException();
+		}		
+		return orders.get(++curOrd);	
 	}
 
 	public void sort() {
 		// sort list of orders according to the sorting rules
-
+		Collections.sort(orders);
 	}
 
 	public void remove() {
 		// if 0
 		// if last item
+		if (curOrd==-1) {
+			throw new IllegalStateException();
+		}
+		order.remove(curOrd);
 	}
 
 	public String toString() {
-
-		Collections.sort(orders);
-		String sortedOrdersAsString = orders.toString();
-		return sortedOrdersAsString;
+		
+		String x = "";
+		for (Order o : orders) {
+			x+= o.toString();
+		}
+		return x;
 	}
 
 	/*-
