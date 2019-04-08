@@ -2,8 +2,11 @@ package jtm.activity10;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 /*-
@@ -44,42 +47,132 @@ public class StreamEditor {
 		String curLineContent; // Content of current line of input file
 		boolean delete = false; // Should delete line?
 
-		int firstArgAsInt = Integer.parseInt(args[0]);
-		inLineNo = firstArgAsInt;
+		/*- TODO Check number of passed parameters. If they are null or number of
+		 * them is not 4, write to standard error (System.err):
+		 * Please use arguments: [-]lineNo (TextToAdd/Replace|-) (inputFile|-) (outputFile|-)
+		 * and exit with System.exit(1); to pass error status of finished program.
+		 */
 
-		content = args[1];
-
-		inFileName = args[2];
-		inFile = new File(inFileName);
-
-		outFileName = args[3];
 		
-		curLineContent = "";
-		content = "";
+		/*- TODO Check number of passed parameters. If they are null or number of
+		 * them is not 4, write to standard error (System.err):
+		 * Please use arguments: [-]lineNo (TextToAdd/Replace|-) (inputFile|-) (outputFile|-)
+		 * and exit with System.exit(1); to pass error status of finished program.
+		 */
 
-		try {
-			reader = new BufferedReader(new FileReader(inFileName));
-			writer = new PrintWriter(outFileName);
-			curLineContent = reader.readLine();
-			
-			
-
-			while ((curLineContent = reader.readLine()) != null) {
-				System.out.println(curLineContent);
-					if (inLineNo != -1) {
-						curLineContent = curLineContent.replaceAll(content);
-
-				}
-			}
-
-		} catch (Exception e) {
-			System.out.println("Problem reading file.");
+		if (args.length != 4) {
+			System.err.println("Please use arguments: [-]lineNo (TextToAdd/Replace|-) (inputFile|-) (outputFile|-)");
+			System.exit(1);
 		}
 
-		content = curLineContent.replace(del, content);
+		// TODO Get integer from the 1st argument. Note that line should be
+		// deleted if number is negative.
+		// Hint. Use Integer.parseInt() to parse String into integer
 
+		//inLineNo = Integer.parseInt(args[0]);
+		//LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(args[2]));
+		
+		// TODO set value of the string from 1st parameter into content
+		
+		content = args[1];
+		
+		/*- TODO Initialize new buffered character writer (PrintWriter) and:
+		 *  1. If output file name (4th parameter) is "-", add writer to the standard output (System.out)
+		 *  2. Otherwise initialize writer to the file of given name.
+		 */
+		 
+		inFileName = args[2];
+		if (inFileName.equals("-")) {
+			reader = new BufferedReader(new InputStreamReader(System.in));
+		} else {
+			inFile = new File(inFileName);
+			if (!inFile.exists()) {
+				inFile.createNewFile();
+			}
+			reader = new BufferedReader(new FileReader(inFileName));
+		}
+
+		/*- TODO Initialize new buffered character writer (PrintWriter) and:
+		 *  1. If output file name (4th parameter) is "-", add writer to the standard output (System.out)
+		 *  2. Otherwise initialize writer to the file of given name.
+		 */
+
+		 outFileName = args[3];
+
+		if (args[3] == "-") {
+			writer = new PrintWriter(System.out);
+		} else {
+			writer = new PrintWriter(new FileWriter(outFileName));
+		}
+
+		// TODO Read lines in loop from passed file/standard input till to the
+		// end. Count number of read lines. Before appending line into writer
+		// check, if it needs to be changed/deleted. Change its value to passed
+		// content or just skip appending it to the writer.
+		// NOTE: append break at the end of written line only if it is NOT null
+		// or empty string!
+		
+		while ((curLineContent = reader.readLine()) != null) {
+			curLineNo++;
+			if (Math.abs(inLineNo) == curLineNo) {
+				if (inLineNo < 0) {
+					continue;
+				} else {
+					curLineContent = content;
+				}
+			}
+		}
+
+		// TODO If number of input line is larger than number of lines in file,
+		// pad file with empty lines before necessary line.
+		
+		if (Math.abs(inLineNo)>curLineNo) {
+			if(inLineNo>0) {
+				int emptyLines = inLineNo-curLineNo-1;
+				for(int i=0; i<emptyLines; i++) {
+					writer.println();
+				}
+				writer.println(content);
+			}
+			
+		}
+
+		// TODO flush cache of the writer and close connections of the reader
+		// and writer
+		
+		writer.flush();
+		reader.close();
+		writer.close();
+		}
+		
 		/*
-		 * try { // input the file content to the StringBuffer "input" BufferedReader
+		 * if ( == 0) { inputStr = inputStr.replace(replaceWith +"1", replaceWith +
+		 * "0"); } } else if (Integer.parseInt(type) == 1) { inputStr =
+		 * inputStr.replace(replaceWith + "0", replaceWith + "1"); }
+		 * 
+		 * // check if the new input is right
+		 * System.out.println("----------------------------------\n" + inputStr);
+		 * 
+		 * // write the new String with the replaced line OVER the same file
+		 * FileOutputStream fileOut = new FileOutputStream("notes.txt");
+		 * fileOut.write(inputStr.getBytes()); fileOut.close();
+		 * 
+		 * // this if structure determines whether or not to replace "0" or "1"
+		 * /*(Integer.parseInt(args[0]) == 0) { inputStr =
+		 * inputStr.replace(curLineContent + "1", curLineContent + "0"); } else if
+		 * (Integer.parseInt(args[0]) == 1) { inputStr = inputStr.replace(curLineContent
+		 * + "0", content + "1"); }
+		 * 
+		 * // check if the new input is right
+		 * System.out.println("----------------------------------\n" + inputStr);
+		 * 
+		 * // write the new String with the replaced line OVER the same file
+		 * FileOutputStream fileOut = new FileOutputStream(args[3]);
+		 * fileOut.write(inputStr.getBytes()); fileOut.close();
+		 * 
+		 * } catch (Exception e) { System.out.println("Problem reading file."); }
+		 * 
+		 * /* try { // input the file content to the StringBuffer "input" BufferedReader
 		 * file = new BufferedReader(new FileReader("notes.txt")); String line;
 		 * StringBuffer inputBuffer = new StringBuffer();
 		 * 
@@ -105,35 +198,17 @@ public class StreamEditor {
 		 * } catch (Exception e) { System.out.println("Problem reading file."); }
 		 */
 
-		/*- TODO Check number of passed parameters. If they are null or number of
-		 * them is not 4, write to standard error (System.err):
-		 * Please use arguments: [-]lineNo (TextToAdd/Replace|-) (inputFile|-) (outputFile|-)
-		 * and exit with System.exit(1); to pass error status of finished program.
-		 */
-
-		if (args.length == 0 || args.length != 4) {
-			System.out.println(System.err);
-			// [-]2 (content|-) (inputFile|-) (outputFile|-);
-			System.exit(1);
-		}
-
 		// TODO Get integer from the 1st argument. Note that line should be
 		// deleted if number is negative.
 		// Hint. Use Integer.parseInt() to parse String into integer
 
 		// TODO set value of the string from 1st parameter into content
 
-		content = args[0];
-
 		/*- TODO Initialize new buffered character reader (BufferedReader) and:
 		 * 1. If input file name (3rd parameter) is "-", add reader to the Standard input (System.in).
 		 * 2. Otherwise check if file exists (if it doesn't, create it) and 
 		 *    add reader to this file.
 		 */
-
-		if (args[2] == "-") {
-
-		}
 
 		/*- TODO Initialize new buffered character writer (PrintWriter) and:
 		 *  1. If output file name (4th parameter) is "-", add writer to the standard output (System.out)
@@ -152,8 +227,6 @@ public class StreamEditor {
 
 		// TODO flush cache of the writer and close connections of the reader
 		// and writer
-		writer.flush();
-		writer.close();
-		reader.close();
+
 	}
 }
