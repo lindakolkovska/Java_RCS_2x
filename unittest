@@ -1,0 +1,171 @@
+package jtm.activity04;
+
+import static jtm.TestUtils.checkMethods;
+import static jtm.TestUtils.handleErrorAndFail;
+import static jtm.TestUtils.toParagraph;
+import static jtm.activity04.TrafficManagementSystem.getRoads;
+import static jtm.activity04.TrafficManagementSystem.getTransports;
+import static jtm.activity04.TrafficManagementSystem.setRoad;
+import static jtm.activity04.TrafficManagementSystem.setVehicle;
+import static org.junit.Assert.*;
+
+import java.util.Locale;
+
+import jtm.TestUtils;
+import org.apache.log4j.Logger;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class TrafficManagementTest {
+	private static Logger logger = Logger.getLogger(TrafficManagementTest.class);
+
+	private static Road[] roads;
+	private static Transport[] transports;
+
+	@BeforeClass
+	public static void test00Design() {
+		try {
+			String[] methods = { "public jtm.activity04.Road()",
+					"public jtm.activity04.Road(java.lang.String,java.lang.String,int)",
+					"public int jtm.activity04.Road.getDistance()",
+					"public java.lang.String jtm.activity04.Road.getFrom()",
+					"public java.lang.String jtm.activity04.Road.getTo()",
+					"public java.lang.String jtm.activity04.Road.toString()",
+					"public void jtm.activity04.Road.setDistance(int)",
+					"public void jtm.activity04.Road.setFrom(java.lang.String)",
+					"public void jtm.activity04.Road.setTo(java.lang.String)" };
+			// Check, that all methods are implemented for tested classes
+			assertEquals("Not all necessary methods are implemented for Road", toParagraph(methods),
+					TestUtils.checkMethods(methods, "jtm.activity04.Road"));
+		} catch (Exception e) {
+			handleErrorAndFail(e, "Got error, when tried to list methods for Road");
+		}
+		try {
+			String[] methods = { "public jtm.activity04.Transport(java.lang.String,float,int)",
+					"public float jtm.activity04.Transport.getConsumption()",
+					"public float jtm.activity04.Transport.getFuelInTank()",
+					"public int jtm.activity04.Transport.getTankSize()",
+					"public java.lang.String jtm.activity04.Transport.getId()",
+					"public java.lang.String jtm.activity04.Transport.move(jtm.activity04.Road)",
+					"public java.lang.String jtm.activity04.Transport.toString()"
+
+			};
+			assertEquals("Not all necessary methods are implemented for Transport. ", toParagraph(methods),
+					checkMethods(methods, "jtm.activity04.Transport"));
+		} catch (Exception e) {
+			handleErrorAndFail(e, "Got error, when tried to list methods for Transport");
+		}
+
+	}
+
+	@Test
+	public void test01Constructors() {
+
+		try {
+			TrafficManagementSystem.initSystem(3, 3);
+			setRoad(new Road("Rīga", "Ogre", 37), 0);
+			setRoad(new Road("Ogre", "Rīga", 37), 1);
+			setRoad(new Road("Rīga", "Ventspils", 180), 2);
+
+			setVehicle(new Transport("A", 5, 55), 0);
+			setVehicle(new Transport("B", 10, 40), 1);
+			setVehicle(new Transport("C", 8, 300), 2);
+
+			roads = getRoads();
+			transports = getTransports();
+
+			assertNotNull("Array of Roads for TrafficManagementSystem is not set", roads);
+			assertNotNull("Array of Transports for TrafficManagementSystem is not set", transports);
+			assertEquals("Size of Roads array is wrong", 3, roads.length);
+			assertEquals("Size of Transports array is wrong", 3, transports.length);
+
+		} catch (Exception e) {
+			handleErrorAndFail(e);
+		}
+
+	}
+
+	@Test
+	public void test02Road() {
+		try {
+			// toString()
+			assertEquals("Road.toString() error", "Ogre — Rīga, 37km", roads[1].toString());
+		} catch (Exception e) {
+			handleErrorAndFail(e);
+		}
+	}
+
+	@Test
+	public void test03Transport() {
+		try {
+			// Test .toString()
+			assertEquals("toString() method error", "Id:A cons:5,0l/100km, tank:55l, fuel:55,00l",
+					transports[0].toString().replace(".", ","));
+
+			// Move transport
+			assertEquals("Transport movement error", "A Transport is moving on Rīga — Ogre, 37km",
+					transports[0].move(roads[0]));
+			assertEquals("Transport movement error", "B Transport is moving on Ogre — Rīga, 37km",
+					transports[1].move(roads[1]));
+			// Move transport on road to consume fuel
+			for (int i = 0; i < 20; i++)
+				assertEquals("Transport movement error", "C Transport is moving on Rīga — Ventspils, 180km",
+						transports[2].move(roads[2]));
+			// Should be insufficient fuel now:
+			assertEquals("Transport fuel consumption error",
+					"Cannot move on Rīga — Ventspils, 180km. Necessary fuel:14.40l, fuel in tank:12.00l",
+					transports[2].move(roads[2]));
+
+			assertEquals("Transport fuel consumption error", 53.15f, transports[0].getFuelInTank(), 0.1f);
+			assertEquals("Transport fuel consumption error", 36.3f, transports[1].getFuelInTank(), 0.1f);
+			assertEquals("Transport toString() method error", "Id:C cons:8,0l/100km, tank:300l, fuel:12,00l",
+					transports[2].toString().replace(".", ","));
+		} catch (Exception e) {
+			handleErrorAndFail(e);
+		}
+
+	}
+
+	/**
+	 * Check access modifiers of the objects
+	 */
+	@Test
+	public void test04Encapsulation() {
+		TestUtils tu = new TestUtils();
+		// Transport
+		Object tmp = transports[0];
+		try {
+			logger.info(tu.listFields(tmp));
+			fail("Transport fields are not private");
+
+		} catch (Exception e) {
+			assertEquals("Transport properties are not private.",
+					"Class jtm.TestUtils can not access a member of class jtm.activity04.Transport with modifiers \"private\"",
+					(e.getMessage()));
+		}
+
+		// Road
+		tmp = roads[0];
+		try {
+			logger.info(tu.listFields(tmp));
+			fail("Road fields are not private.");
+
+		} catch (Exception e) {
+			assertEquals("Road properties are not private.",
+					"Class jtm.TestUtils can not access a member of class jtm.activity04.Road with modifiers \"private\"",
+					(e.getMessage()));
+		}
+	}
+
+	@Test
+	public void test05FormatLocale() {
+		Transport transport = new Transport("AAA", 1.00f, 20);
+		Locale.setDefault(new Locale("lv", "LV"));
+		assertEquals("Number formating error. Check that locale is set to US.",
+				"Id:AAA cons:1.0l/100km, tank:20l, fuel:20.00l", transport.toString());
+	}
+
+}
